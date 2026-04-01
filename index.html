@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Est-items - App Gallery</title>
+    <title>Est-items | Premium App Gallery</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -16,312 +15,275 @@
             theme: {
                 extend: {
                     colors: {
-                        'brand-primary': '#4F46E5', // A strong, modern blue
-                        'brand-secondary': '#6366F1',
-                        'brand-light': '#EEF2FF',
-                        'dark-bg': '#111827',
-                        'dark-card': '#1F2937',
-                        'dark-text': '#E5E7EB',
-                        'light-bg': '#F9FAFB',
-                        'light-card': '#FFFFFF',
-                        'light-text': '#111827',
-                        'gradient-blue-start': '#4F46E5', // Custom gradient colors
-                        'gradient-blue-end': '#00C6FF',
+                        'accent': '#6366F1',
+                        'accent-dark': '#4338CA',
                     },
                     fontFamily: {
-                        sans: ['Roboto', 'sans-serif'],
-                        display: ['Poppins', 'sans-serif'],
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Syne', 'sans-serif'],
                     },
-                    keyframes: {
-                        'fade-in-up': {
-                            '0%': { opacity: '0', transform: 'translateY(20px)' },
-                            '100%': { opacity: '1', transform: 'translateY(0)' },
-                        },
-                        'bounce-y': {
-                            '0%, 100%': { transform: 'translateY(-25%)' },
-                            '50%': { transform: 'translateY(0)' },
-                        }
-                    },
-                    animation: {
-                        'fade-in-up': 'fade-in-up 0.6s ease-out forwards',
-                        'fade-in-up-delay': 'fade-in-up 0.8s ease-out forwards',
-                        'bounce-y': 'bounce-y 1s infinite',
-                    }
                 },
             },
-            plugins: [],
         }
     </script>
-    <style>
-        .download-btn {
-            @apply flex items-center justify-center gap-2 bg-brand-primary text-white font-bold py-4 px-8 rounded-full text-lg shadow-lg hover:bg-brand-secondary transform hover:scale-105 transition-all duration-300;
-        }
-        .app-card-download-btn {
-            @apply w-full flex items-center justify-center gap-2 bg-brand-primary text-white font-semibold py-3 px-6 rounded-lg text-lg shadow-md hover:bg-brand-secondary transform hover:scale-105 transition-all duration-300;
-        }
 
-        /* Custom scroll-snap for future expansion if desired */
-        .scroll-snap-y-container {
-            scroll-snap-type: y mandatory;
+    <style>
+        :root { scroll-behavior: smooth; }
+        body { font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        .text-gradient {
+            background: linear-gradient(135deg, #6366F1 0%, #A855F7 50%, #EC4899 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
-        .scroll-snap-y-item {
-            scroll-snap-align: start;
+        .glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
+        .dark .glass {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .premium-card { 
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1); 
+            position: relative;
+        }
+        .premium-card:hover {
+            transform: translateY(-10px) scale(1.01);
+            box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.25);
+        }
+        .dropdown-container { position: relative; z-index: 50; }
     </style>
 </head>
-<body class="bg-light-bg text-light-text dark:bg-dark-bg dark:text-dark-text min-h-screen flex flex-col transition-colors duration-500">
+<body class="bg-slate-50 text-slate-900 dark:bg-[#020617] dark:text-slate-100 transition-colors duration-500">
 
-    <header class="p-4 flex justify-between items-center z-20 sticky top-0 bg-light-card/80 dark:bg-dark-card/80 backdrop-blur-md shadow-sm">
-        <div class="flex items-center">
-            <img src="./assets/app-icons/e-commerce-logo.png" alt="Est-items Logo" class="h-10 w-10 mr-3 rounded-full shadow-md">
-            <h1 class="text-2xl font-display font-bold text-brand-primary">Est-items</h1>
+    <nav class="fixed w-full z-50 transition-all duration-300 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex justify-between items-center glass rounded-2xl p-4 shadow-2xl">
+            <div class="flex items-center gap-3">
+                <div class="p-1 bg-gradient-to-tr from-accent to-purple-500 rounded-lg shadow-lg">
+                    <img src="./assets/app-icons/e-commerce-logo.png" alt="Logo" class="h-8 w-8 rounded-md">
+                </div>
+                <span class="font-heading text-2xl tracking-tighter font-extrabold">EST<span class="text-accent">.</span></span>
+            </div>
+            <button id="darkModeToggle" class="w-10 h-10 flex items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-800 hover:ring-2 ring-accent transition-all">
+                <i id="sunIcon" class="fas fa-sun text-orange-400 hidden"></i>
+                <i id="moonIcon" class="fas fa-moon text-indigo-400"></i>
+            </button>
         </div>
-        <button id="darkModeToggle" class="p-2 rounded-full bg-light-bg dark:bg-dark-bg text-light-text dark:text-dark-text focus:outline-none focus:ring-2 focus:ring-brand-primary transition-colors duration-300">
-            <i id="sunIcon" class="fas fa-sun w-6 h-6 hidden"></i>
-            <i id="moonIcon" class="fas fa-moon w-6 h-6"></i>
-        </button>
-    </header>
+    </nav>
 
-    <main class="flex-grow p-4 py-8 md:py-16">
-        <section class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-20 scroll-snap-y-item">
-            <div class="text-center md:text-left">
-                <h2 class="text-4xl lg:text-5xl font-display font-extrabold text-brand-primary mb-4 leading-tight animate-fade-in-up">
-                    Task: Your Ultimate Solution
-                </h2>
-                <p class="text-lg lg:text-xl text-light-text/80 dark:text-dark-text/80 mb-6 max-w-lg mx-auto md:mx-0 animate-fade-in-up-delay">
-                    Get instant access to our powerful flagship application. Download now and simplify your daily tasks with our secure and reliable features.
-                </p>
-
-            
-
-                <div class="flex justify-center md:justify-start items-center gap-2 text-light-text/60 dark:text-dark-text/60 mt-4">
-                    <i class="fab fa-apple text-3xl"></i>
-                    <p class="text-sm font-semibold">iOS Version Coming Soon</p>
+    <main>
+        <section class="relative pt-40 pb-20 px-6 overflow-hidden">
+            <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center relative">
+                <div>
+                    <span class="inline-block py-1 px-3 rounded-full bg-accent/10 text-accent text-xs font-bold tracking-widest mb-6 uppercase">New Generation Utility</span>
+                    <h1 class="font-heading text-6xl md:text-7xl lg:text-8xl leading-tight mb-8">
+                        EST: Your <span class="text-gradient underline decoration-accent/20">Ultimate</span> Solution.
+                    </h1>
+                    <p class="text-xl text-slate-600 dark:text-slate-400 mb-10 max-w-lg leading-relaxed">
+                        Experience the peak of mobile engineering. Secure, rapid, and aesthetically flawless.
+                    </p>
+                    <a href="#app-gallery" class="inline-block bg-accent hover:bg-accent-dark text-white px-10 py-5 rounded-2xl font-bold shadow-xl transition-all transform hover:-translate-y-1">Explore Apps</a>
                 </div>
-            </div>
-
-            <div class="relative hidden md:block">
-                <div class="aspect-w-9 aspect-h-16 rounded-3xl overflow-hidden shadow-2xl ring-4 ring-brand-primary ring-opacity-50 transform rotate-3 hover:rotate-0 transition-transform duration-500">
-                    <img src="./assets/screenshots/est-items-ss1.png" alt="Est-items Screenshot 1" class="object-cover w-full h-full">
-                </div>
-                <div class="absolute inset-y-1/4 -left-16 aspect-w-9 aspect-h-16 w-1/2 rounded-3xl overflow-hidden shadow-xl ring-2 ring-white transform -rotate-6 hover:rotate-0 transition-transform duration-500">
-                    <img src="./assets/screenshots/est-items-ss2.png" alt="Est-items Screenshot 2" class="object-cover w-full h-full">
-                </div>
-            </div>
-        </section>
-
-        ---
-
-        <section class="max-w-7xl mx-auto mt-16 md:mt-24 text-center">
-            <h3 class="text-4xl font-display font-bold text-brand-primary mb-12">Our Stellar Applications</h3>
-            
-            <div id="app-gallery" class="space-y-20"> 
-                <div class="app-card bg-gradient-to-br from-gradient-blue-start/10 to-gradient-blue-end/10 dark:from-dark-card dark:to-dark-bg rounded-3xl shadow-2xl p-6 md:p-10 lg:p-12 border border-brand-light dark:border-dark-card relative overflow-hidden group scroll-snap-y-item">
-                    <div class="absolute inset-0 bg-cover bg-center opacity-10 dark:opacity-5 blur-sm z-0" style="background-image: url('https://via.placeholder.com/1200x600.png?text=E-Commerce+App+Banner');"></div>
-                    <div class="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
-                        <div class="text-center lg:text-left">
-                            <img src="./assets/app-icons/productivity-logo.png" alt="E-Commerce App Logo" class="mx-auto lg:mx-0 w-28 h-28 rounded-3xl mb-6 shadow-xl ring-4 ring-brand-primary/20 p-2 bg-light-card dark:bg-dark-card">
-                            <h4 class="text-4xl font-display font-extrabold text-brand-primary mb-3">Xviewer Lite Marketplace</h4>
-                            <p class="text-lg text-light-text/80 dark:text-dark-text/80 mb-8 max-w-xl mx-auto lg:mx-0">
-                                Enjoy seamless playback with our powerful video player app. Stream, organize, and watch your favorite content with ease — plus a dedicated safe mode for kids’ videos.
-                            </p>
-
-                            <div class="flex flex-col sm:flex-row justify-center lg:justify-start gap-4 mb-6">
-                                <a href="https://github.com/adeyemoadeniyi99-web/est-applications/releases/download/v1.0.0/xviewer-Full.apk" 
-                                class="app-card-download-btn">
-                                    <i class="fas fa-download"></i>
-                                    <span>Download APK (66.1 MB)</span>
-                                </a>
-                                <div class="relative inline-block text-left">
-                                    <button id="ecomSplitApkDropdownButton" 
-                                    class="group btn-secondary bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-bold py-3 px-6 rounded-lg shadow-md hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors duration-300">
-                                        <div class="flex items-center gap-2">
-                                            <i class="fas fa-list-ul text-xl"></i>
-                                            <span>Split Versions</span>
-                                            <i class="fas fa-chevron-down text-sm transition-transform duration-300 group-focus:rotate-180"></i>
-                                        </div>
-                                    </button>
-                                    <div id="ecomSplitApkDropdownMenu" 
-                                    class="absolute left-1/2 -translate-x-1/2 sm:left-auto sm:translate-x-0 mt-2 w-full sm:w-56 rounded-md shadow-lg bg-light-card dark:bg-dark-card ring-1 ring-black ring-opacity-5 focus:outline-none z-20 hidden">
-                                        <div class="py-1">
-                                            <a href="https://github.com/adeyemoadeniyi99-web/est-applications/releases/download/v1.0.0/xviewer-arm64-v8a.apk" 
-                                            class="block px-4 py-2 text-sm text-light-text dark:text-dark-text hover:bg-light-bg dark:hover:bg-dark-bg">
-                                            Split APK (arm64-v8a) <span class="text-xs text-gray-500">(25.4 MB)</span>
-                                            </a>
-                                            <a href="https://github.com/adeyemoadeniyi99-web/est-applications/releases/download/v1.0.0/xviewer-armeabi-v7a.apk" 
-                                            class="block px-4 py-2 text-sm text-light-text dark:text-dark-text hover:bg-light-bg dark:hover:bg-dark-bg">
-                                            Split APK (armeabi-v7a) <span class="text-xs text-gray-500">(23.6 MB)</span>
-                                            </a>
-                                            <a href="https://github.com/adeyemoadeniyi99-web/est-applications/releases/download/v1.0.0/xviewer-x86_64.apk" 
-                                            class="block px-4 py-2 text-sm text-light-text dark:text-dark-text hover:bg-light-bg dark:hover:bg-dark-bg">
-                                            Split APK (x86_64) <span class="text-xs text-gray-500">(30.9 MB)</span>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="flex justify-center lg:justify-start items-center gap-2 text-light-text/60 dark:text-dark-text/60 mt-4">
-                                <i class="fab fa-apple text-3xl"></i>
-                                <p class="text-sm font-semibold">iOS Version Coming Soon</p>
-                            </div>
-                        </div>
-
-                        <div class="relative flex justify-center items-center lg:justify-end min-h-[300px]">
-                            <img src="./assets/screenshots/productivity-ss1.png" alt="E-Commerce Screenshot 1" class="w-48 md:w-56 rounded-2xl shadow-xl ring-2 ring-brand-primary/30 transform -rotate-6 hover:rotate-0 transition-transform duration-500 z-10">
-                            <img src="./assets/screenshots/productivity-ss2.png" alt="E-Commerce Screenshot 2" class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-48 md:w-56 rounded-2xl shadow-xl ring-2 ring-brand-primary/30 transform rotate-3 hover:rotate-0 transition-transform duration-500 ml-20 mt-10 z-0">
-                        </div>
+                <div class="relative">
+                    <div class="relative z-10 p-4 glass rounded-[3rem] shadow-2xl rotate-2 hover:rotate-0 transition-transform duration-700">
+                        <img src="./assets/screenshots/est-items-ss1.png" class="rounded-[2.5rem]">
                     </div>
-                </div>
-
-                <div class="app-card bg-gradient-to-br from-brand-secondary/10 to-brand-primary/10 dark:from-dark-card dark:to-dark-bg rounded-3xl shadow-2xl p-6 md:p-10 lg:p-12 border border-brand-light dark:border-dark-card relative overflow-hidden group scroll-snap-y-item">
-                    <div class="absolute inset-0 bg-cover bg-center opacity-10 dark:opacity-5 blur-sm z-0" style="background-image: url('https://via.placeholder.com/1200x600.png?text=Productivity+App+Banner');"></div>
-                    <div class="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-60 items-center">
-                        <div class="text-center lg:text-left order-2 lg:order-1">
-                            <img src="./assets/app-icons/e-commerce-logo.png" alt="Productivity App Logo" class="mx-auto lg:mx-0 w-28 h-28 rounded-3xl mb-6 shadow-xl ring-4 ring-brand-primary/20 p-2 bg-light-card dark:bg-dark-card">
-                            <h4 class="text-4xl font-display font-extrabold text-brand-primary mb-3">Task Marketplace</h4>
-                            <p class="text-lg text-light-text/80 dark:text-dark-text/80 mb-8 max-w-xl mx-auto lg:mx-0">
-                                Capture, organize, and protect your thoughts effortlessly with our intuitive and secure note-taking application. Enjoy seamless access and peace of mind with advanced privacy features.
-                            </p>
-
-                            <div class="flex flex-col sm:flex-row justify-center lg:justify-start gap-4 mb-6">
-                                <a href="https://github.com/adeyemoadeniyi99-web/est-applications/releases/download/v1.0.0/Task-Full-Version.apk" 
-                                class="app-card-download-btn">
-                                    <i class="fas fa-download"></i>
-                                    <span>Download APK (58.1 MB)</span>
-                                </a>
-                                <div class="relative inline-block text-left">
-                                    <button id="prodSplitApkDropdownButton" 
-                                    class="group btn-secondary bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-bold py-3 px-6 rounded-lg shadow-md hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors duration-300">
-                                        <div class="flex items-center gap-2">
-                                            <i class="fas fa-list-ul text-xl"></i>
-                                            <span>Split Versions</span>
-                                            <i class="fas fa-chevron-down text-sm transition-transform duration-300 group-focus:rotate-180"></i>
-                                        </div>
-                                    </button>
-                                    <div id="prodSplitApkDropdownMenu" 
-                                    class="absolute left-1/2 -translate-x-1/2 sm:left-auto sm:translate-x-0 mt-2 w-full sm:w-56 rounded-md shadow-lg bg-light-card dark:bg-dark-card ring-1 ring-black ring-opacity-5 focus:outline-none z-20 hidden">
-                                        <div class="py-1">
-                                            <a href="https://github.com/adeyemoadeniyi99-web/est-applications/releases/download/v1.0.0/Task-arm64-v8a.apk" 
-                                            class="block px-4 py-2 text-sm text-light-text dark:text-dark-text hover:bg-light-bg dark:hover:bg-dark-bg">
-                                            Split APK (arm64-v8a) <span class="text-xs text-gray-500">(25.1 MB)</span>
-                                            </a>
-                                            <a href="https://github.com/adeyemoadeniyi99-web/est-applications/releases/download/v1.0.0/Task-abi-v7a.apk" 
-                                            class="block px-4 py-2 text-sm text-light-text dark:text-dark-text hover:bg-light-bg dark:hover:bg-dark-bg">
-                                            Split APK (armeabi-v7a) <span class="text-xs text-gray-500">(22.9 MB)</span>
-                                            </a>
-                                            <a href="https://github.com/adeyemoadeniyi99-web/est-applications/releases/download/v1.0.0/Task-x86_64.apk" 
-                                            class="block px-4 py-2 text-sm text-light-text dark:text-dark-text hover:bg-light-bg dark:hover:bg-dark-bg">
-                                            Split APK (x86_64) <span class="text-xs text-gray-500">(30.2 MB)</span>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="flex justify-center lg:justify-start items-center gap-2 text-light-text/60 dark:text-dark-text/60 mt-4">
-                                <i class="fab fa-apple text-3xl"></i>
-                                <p class="text-sm font-semibold">iOS Version Coming Soon</p>
-                            </div>
-                        </div>
-
-                        <div class="relative flex justify-center items-center lg:justify-start min-h-[300px] order-1 lg:order-2">
-                            <img src="./assets/screenshots/e-commerce-ss1.png" alt="Productivity Screenshot 1" class="w-48 md:w-56 rounded-2xl shadow-xl ring-2 ring-brand-primary/30 transform rotate-6 hover:rotate-0 transition-transform duration-500 z-10">
-                            <img src="./assets/screenshots/e-commerce-ss2.png" alt="Productivity Screenshot 2" class="absolute right-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-48 md:w-56 rounded-2xl shadow-xl ring-2 ring-brand-primary/30 transform -rotate-3 hover:rotate-0 transition-transform duration-500 mr-20 mt-10 z-0">
-                        </div>
+                    <div class="absolute -top-10 -right-10 w-64 p-3 glass rounded-[2rem] shadow-2xl -rotate-12 hidden md:block">
+                        <img src="./assets/screenshots/est-items-ss2.png" class="rounded-[1.5rem]">
                     </div>
                 </div>
             </div>
         </section>
-        
-        <section class="max-w-6xl mx-auto mt-16 md:mt-24 text-center">
-            <h3 class="text-3xl font-display font-bold mb-8">What You'll Love About Est-Applications</h3>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                <div class="p-6 bg-light-card dark:bg-dark-card rounded-xl shadow-lg transform hover:scale-105 transition-transform duration-300">
-                    <i class="fas fa-shipping-fast text-4xl text-brand-primary mb-4"></i>
-                    <h4 class="text-xl font-semibold mb-2">Blazing Fast</h4>
-                    <p class="text-light-text/70 dark:text-dark-text/70">Get your tasks done in record time with our optimized performance.</p>
+
+        <section id="app-gallery" class="py-24 px-6 bg-white dark:bg-[#020617]">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center mb-20">
+                    <h2 class="font-heading text-4xl md:text-6xl mb-4">The Collection</h2>
+                    <div class="h-1.5 w-24 bg-accent mx-auto rounded-full"></div>
                 </div>
-                <div class="p-6 bg-light-card dark:bg-dark-card rounded-xl shadow-lg transform hover:scale-105 transition-transform duration-300">
-                    <i class="fas fa-lock text-4xl text-brand-primary mb-4"></i>
-                    <h4 class="text-xl font-semibold mb-2">Secure & Private</h4>
-                    <p class="text-light-text/70 dark:text-dark-text/70">Your data is protected with end-to-end encryption and robust security measures.</p>
-                </div>
-                <div class="p-6 bg-light-card dark:bg-dark-card rounded-xl shadow-lg transform hover:scale-105 transition-transform duration-300">
-                    <i class="fas fa-palette text-4xl text-brand-primary mb-4"></i>
-                    <h4 class="text-xl font-semibold mb-2">Beautiful Interface</h4>
-                    <p class="text-light-text/70 dark:text-dark-text/70">Enjoy a sleek and intuitive design that makes navigation a breeze.</p>
+
+                <div class="grid gap-40">
+                    
+                    <div class="premium-card group relative grid lg:grid-cols-2 gap-12 p-8 lg:p-16 rounded-[4rem] bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800">
+                        <div class="order-2 lg:order-1 relative z-20">
+                            <img src="./assets/app-icons/app_icon.png" class="w-20 h-20 rounded-2xl mb-8 shadow-2xl">
+                            <h3 class="text-4xl font-heading mb-6">Save Now Marketplace</h3>
+                            <p class="text-lg text-slate-500 mb-8 leading-relaxed">Save Now makes it easy to view, download, and keep your favorite photos, videos, and moments in just a tap. Fast, secure, and designed for simplicity, so you never miss a memory worth keeping.Smart saving. Seamless experience.</p>
+                            
+                            <div class="flex flex-wrap gap-4">
+                                <a href="https://github.com/adeyemoadeniyi99-web/est-applications/releases/download/v1.0.0/save-now-full-app-release.apk" class="bg-slate-900 dark:bg-white dark:text-slate-900 text-white px-8 py-4 rounded-xl font-bold flex items-center gap-3 hover:scale-105 transition-transform">
+                                    <i class="fas fa-download"></i> Full APK (60.9 MB)
+                                </a>
+                                
+                                <div class="dropdown-container">
+                                    <button id="ecomSplitBtn" class="px-8 py-4 rounded-xl border-2 border-slate-200 dark:border-slate-700 font-bold flex items-center gap-3 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all">
+                                        <span>Architectures</span> <i class="fas fa-chevron-down text-xs"></i>
+                                    </button>
+                                    <div id="ecomDrop" class="hidden absolute left-0 top-full mt-2 w-72 glass rounded-2xl shadow-2xl p-2 z-[100]">
+                                        <a href="https://github.com/adeyemoadeniyi99-web/est-applications/releases/download/v1.0.0/save-now-arm64-v8a-release.apk" class="block px-4 py-3 text-sm hover:bg-accent hover:text-white rounded-xl mb-1 transition-colors">
+                                            Split APK (arm64-v8a) <span class="block text-[10px] opacity-70 italic">27.8 MB</span>
+                                        </a>
+                                        <a href="https://github.com/adeyemoadeniyi99-web/est-applications/releases/download/v1.0.0/save-now-armeabi-v7a-release.apk" class="block px-4 py-3 text-sm hover:bg-accent hover:text-white rounded-xl mb-1 transition-colors">
+                                            Split APK (armeabi-v7a) <span class="block text-[10px] opacity-70 italic">25.5 MB</span>
+                                        </a>
+                                        <a href="https://github.com/adeyemoadeniyi99-web/est-applications/releases/download/v1.0.0/save-now-x86_64-release.apk" class="block px-4 py-3 text-sm hover:bg-accent hover:text-white rounded-xl transition-colors">
+                                            Split APK (x86_64) <span class="block text-[10px] opacity-70 italic">29.0 MB</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="order-1 lg:order-2 flex items-center justify-center relative">
+                            <img src="./assets/screenshots/status-saver.png" class="w-2/3 rounded-[2rem] shadow-2xl rotate-6 group-hover:rotate-0 transition-all duration-500 relative z-10">
+                            <img src="./assets/screenshots/statussave.png" class="absolute w-1/3 -bottom-4 -left-4 rounded-2xl shadow-2xl -rotate-12 group-hover:rotate-0 transition-all duration-700 z-20">
+                        </div>
+                    </div>
+
+                    <div class="premium-card group relative grid lg:grid-cols-2 gap-12 p-8 lg:p-16 rounded-[4rem] bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900">
+                        <div class="flex items-center justify-center relative">
+                            <img src="./assets/screenshots/e-commerce-ss1.png" class="w-2/3 rounded-[2rem] shadow-2xl -rotate-6 group-hover:rotate-0 transition-all duration-500 relative z-10">
+                            <img src="./assets/screenshots/e-commerce-ss2.png" class="absolute w-1/3 -top-4 -right-4 rounded-2xl shadow-2xl rotate-12 group-hover:rotate-0 transition-all duration-700 z-20">
+                        </div>
+                        <div class="relative z-20">
+                            <img src="./assets/app-icons/e-commerce-logo.png" class="w-20 h-20 rounded-2xl mb-8 shadow-2xl">
+                            <h3 class="text-4xl font-heading mb-6">Task Marketplace</h3>
+                            <p class="text-lg opacity-70 mb-8 leading-relaxed">Capture, organize, and protect your thoughts effortlessly with our intuitive note-taking application.</p>
+                            
+                            <div class="flex flex-wrap gap-4">
+                                <a href="https://github.com/adeyemoadeniyi99-web/est-applications/releases/download/v1.0.0/Task-Full-Version.apk" class="bg-accent text-white px-8 py-4 rounded-xl font-bold flex items-center gap-3 hover:shadow-xl transition-all">
+                                    <i class="fas fa-download"></i> Full APK (58.1 MB)
+                                </a>
+
+                                <div class="dropdown-container">
+                                    <button id="taskSplitBtn" class="px-8 py-4 rounded-xl border-2 border-white/20 dark:border-slate-300 font-bold flex items-center gap-3 hover:bg-white/10 transition-all">
+                                        <span>Architectures</span> <i class="fas fa-chevron-down text-xs"></i>
+                                    </button>
+                                    <div id="taskDrop" class="hidden absolute left-0 top-full mt-2 w-72 glass dark:bg-white rounded-2xl shadow-2xl p-2 z-[100] text-slate-900">
+                                        <a href="https://github.com/adeyemoadeniyi99-web/est-applications/releases/download/v1.0.0/Task-arm64-v8a.apk" class="block px-4 py-3 text-sm hover:bg-accent hover:text-white rounded-xl mb-1 transition-colors">
+                                            Split APK (arm64-v8a) <span class="block text-[10px] opacity-70 italic">25.1 MB</span>
+                                        </a>
+                                        <a href="https://github.com/adeyemoadeniyi99-web/est-applications/releases/download/v1.0.0/Task-abi-v7a.apk" class="block px-4 py-3 text-sm hover:bg-accent hover:text-white rounded-xl mb-1 transition-colors">
+                                            Split APK (armeabi-v7a) <span class="block text-[10px] opacity-70 italic">22.9 MB</span>
+                                        </a>
+                                        <a href="https://github.com/adeyemoadeniyi99-web/est-applications/releases/download/v1.0.0/Task-x86_64.apk" class="block px-4 py-3 text-sm hover:bg-accent hover:text-white rounded-xl transition-colors">
+                                            Split APK (x86_64) <span class="block text-[10px] opacity-70 italic">30.2 MB</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="premium-card group relative grid lg:grid-cols-2 gap-12 p-8 lg:p-16 rounded-[4rem] bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800">
+                        <div class="order-2 lg:order-1 relative z-20">
+                            <img src="./assets/app-icons/productivity-logo.png" class="w-20 h-20 rounded-2xl mb-8 shadow-2xl">
+                            <h3 class="text-4xl font-heading mb-6">Xviewer Lite Marketplace</h3>
+                            <p class="text-lg text-slate-500 mb-8 leading-relaxed">Enjoy seamless playback with our powerful video player app. Stream, organize, and watch your favorite content.</p>
+                            
+                            <div class="flex flex-wrap gap-4">
+                                <a href="https://github.com/adeyemoadeniyi99-web/est-applications/releases/download/v1.0.0/xviewer-Full.apk" class="bg-slate-900 dark:bg-white dark:text-slate-900 text-white px-8 py-4 rounded-xl font-bold flex items-center gap-3 hover:scale-105 transition-transform">
+                                    <i class="fas fa-download"></i> Full APK (66.1 MB)
+                                </a>
+                                
+                                <div class="dropdown-container">
+                                    <button id="xviewerSplitBtn" class="px-8 py-4 rounded-xl border-2 border-slate-200 dark:border-slate-700 font-bold flex items-center gap-3 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all">
+                                        <span>Architectures</span> <i class="fas fa-chevron-down text-xs"></i>
+                                    </button>
+                                    <div id="xviewerDrop" class="hidden absolute left-0 top-full mt-2 w-72 glass rounded-2xl shadow-2xl p-2 z-[100]">
+                                        <a href="https://github.com/adeyemoadeniyi99-web/est-applications/releases/download/v1.0.0/xviewer-arm64-v8a.apk" class="block px-4 py-3 text-sm hover:bg-accent hover:text-white rounded-xl mb-1 transition-colors">
+                                            Split APK (arm64-v8a) <span class="block text-[10px] opacity-70 italic">25.4 MB</span>
+                                        </a>
+                                        <a href="https://github.com/adeyemoadeniyi99-web/est-applications/releases/download/v1.0.0/xviewer-armeabi-v7a.apk" class="block px-4 py-3 text-sm hover:bg-accent hover:text-white rounded-xl mb-1 transition-colors">
+                                            Split APK (armeabi-v7a) <span class="block text-[10px] opacity-70 italic">23.6 MB</span>
+                                        </a>
+                                        <a href="https://github.com/adeyemoadeniyi99-web/est-applications/releases/download/v1.0.0/xviewer-x86_64.apk" class="block px-4 py-3 text-sm hover:bg-accent hover:text-white rounded-xl transition-colors">
+                                            Split APK (x86_64) <span class="block text-[10px] opacity-70 italic">30.9 MB</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="order-1 lg:order-2 flex items-center justify-center relative">
+                            <img src="./assets/screenshots/productivity-ss1.png" class="w-2/3 rounded-[2rem] shadow-2xl rotate-6 group-hover:rotate-0 transition-all duration-500 relative z-10">
+                            <img src="./assets/screenshots/productivity-ss2.png" class="absolute w-1/3 -bottom-4 -left-4 rounded-2xl shadow-2xl -rotate-12 group-hover:rotate-0 transition-all duration-700 z-20">
+                        </div>
+                    </div>
+
+                    
+
                 </div>
             </div>
         </section>
     </main>
 
-    <footer class="bg-brand-primary text-white p-6 text-center mt-20">
-        <p>&copy; 2024 Est-items. All rights reserved.</p>
-        <div class="flex justify-center space-x-4 mt-2">
-            <a href="#" class="hover:text-brand-light transition-colors duration-300">Privacy Policy</a>
-            <a href="#" class="hover:text-brand-light transition-colors duration-300">Terms of Service</a>
-        </div>
+    <footer class="py-20 px-6 border-t border-slate-100 dark:border-slate-800 text-center">
+        <p class="font-heading text-xl mb-2 uppercase text-slate-400">EST-ITEMS</p>
+        <p class="text-slate-500 text-sm">© 2024 Premium Engineering. All rights reserved.</p>
     </footer>
 
     <script>
-        const darkModeToggle = document.getElementById('darkModeToggle');
+        const html = document.documentElement;
         const sunIcon = document.getElementById('sunIcon');
         const moonIcon = document.getElementById('moonIcon');
-        const html = document.documentElement;
 
-        // Dark mode toggle logic
-        const currentTheme = localStorage.getItem('theme');
-        if (currentTheme === 'dark') {
-            html.classList.add('dark');
-            sunIcon.classList.remove('hidden');
-            moonIcon.classList.add('hidden');
-        } else {
-            html.classList.remove('dark');
-            sunIcon.classList.add('hidden');
-            moonIcon.classList.remove('hidden');
+        function updateIcons() {
+            if (html.classList.contains('dark')) {
+                sunIcon.classList.remove('hidden'); moonIcon.classList.add('hidden');
+            } else {
+                sunIcon.classList.add('hidden'); moonIcon.classList.remove('hidden');
+            }
         }
 
-        darkModeToggle.addEventListener('click', () => {
-            if (html.classList.contains('dark')) {
-                html.classList.remove('dark');
-                localStorage.setItem('theme', 'light');
-                sunIcon.classList.add('hidden');
-                moonIcon.classList.remove('hidden');
-            } else {
-                html.classList.add('dark');
-                localStorage.setItem('theme', 'dark');
-                sunIcon.classList.remove('hidden');
-                moonIcon.classList.add('hidden');
-            }
-        });
+        document.getElementById('darkModeToggle').onclick = () => {
+            html.classList.toggle('dark');
+            localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
+            updateIcons();
+        };
 
-        
-        // Dropdown logic for the xviewer App
-        const ecomSplitApkDropdownButton = document.getElementById('ecomSplitApkDropdownButton');
-        const ecomSplitApkDropdownMenu = document.getElementById('ecomSplitApkDropdownMenu');
+        // Get all buttons and dropdowns
+const ecomSplitBtn = document.getElementById('ecomSplitBtn');
+const ecomDrop = document.getElementById('ecomDrop');
+const taskSplitBtn = document.getElementById('taskSplitBtn');
+const taskDrop = document.getElementById('taskDrop');
+const xviewerSplitBtn = document.getElementById('xviewerSplitBtn'); // New
+const xviewerDrop = document.getElementById('xviewerDrop');         // New
 
-        ecomSplitApkDropdownButton.addEventListener('click', () => {
-            ecomSplitApkDropdownMenu.classList.toggle('hidden');
-        });
+// Helper function to close all menus
+function closeAllMenus() {
+    ecomDrop.classList.add('hidden');
+    taskDrop.classList.add('hidden');
+    xviewerDrop.classList.add('hidden');
+}
 
-        // Dropdown logic for the Productivity Suite (Task App)
-        const prodSplitApkDropdownButton = document.getElementById('prodSplitApkDropdownButton');
-        const prodSplitApkDropdownMenu = document.getElementById('prodSplitApkDropdownMenu');
+// Save Now Dropdown
+ecomSplitBtn.onclick = (e) => { 
+    e.stopPropagation(); 
+    const isHidden = ecomDrop.classList.contains('hidden');
+    closeAllMenus();
+    if (isHidden) ecomDrop.classList.remove('hidden'); 
+}
 
-        prodSplitApkDropdownButton.addEventListener('click', () => {
-            prodSplitApkDropdownMenu.classList.toggle('hidden');
-        });
+// Task Dropdown
+taskSplitBtn.onclick = (e) => { 
+    e.stopPropagation(); 
+    const isHidden = taskDrop.classList.contains('hidden');
+    closeAllMenus();
+    if (isHidden) taskDrop.classList.remove('hidden'); 
+}
 
+// Xviewer Dropdown
+xviewerSplitBtn.onclick = (e) => { 
+    e.stopPropagation(); 
+    const isHidden = xviewerDrop.classList.contains('hidden');
+    closeAllMenus();
+    if (isHidden) xviewerDrop.classList.remove('hidden'); 
+}
 
-        // Close all dropdowns if clicking outside
-        window.addEventListener('click', (event) => {
-        
-            if (!ecomSplitApkDropdownButton.contains(event.target) && !ecomSplitApkDropdownMenu.contains(event.target)) {
-                ecomSplitApkDropdownMenu.classList.add('hidden');
-            }
-            if (!prodSplitApkDropdownButton.contains(event.target) && !prodSplitApkDropdownMenu.contains(event.target)) {
-                prodSplitApkDropdownMenu.classList.add('hidden');
-            }
-        });
+// Close when clicking anywhere else
+window.onclick = () => { 
+    closeAllMenus(); 
+}
     </script>
 </body>
 </html>
